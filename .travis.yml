@@ -1,0 +1,5 @@
+language: go
+script:
+  - go test -coverprofile=coverage.txt -covermode=atomic -args -update-golden
+after_script:
+  - bash <(curl -s https://codecov.io/bash)
