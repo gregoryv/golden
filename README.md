@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/gregoryv/golden.svg?branch=master)](https://travis-ci.org/gregoryv/golden)
 [![codecov](https://codecov.io/gh/gregoryv/golden/branch/master/graph/badge.svg)](https://codecov.io/gh/gregoryv/golden)
+[![Maintainability](https://api.codeclimate.com/v1/badges/df2736e1ac63580b49d7/maintainability)](https://codeclimate.com/github/gregoryv/golden/maintainability)
 
 [golden](https://godoc.org/github.com/gregoryv/golden) - package defines test helper for working with golden files
 
