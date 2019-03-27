@@ -61,7 +61,7 @@ func ExampleSaveString() {
 	if got != exp {
 		t.Errorf("Got %q, expected %q", got, exp)
 	}
-	SaveString(t, got) // Does nothing unless -args -update-golden flags are present
+	SaveString(t, got) // Does nothing unless -update-golden flags are present
 }
 
 func doSomething() string { return "hello" }

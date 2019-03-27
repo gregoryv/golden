@@ -85,7 +85,8 @@ func (s *store) save(t T, data []byte) {
 	}
 	// Append the output to list of golden files so it's easy to spot
 	// when a file should be removed.
-	f, err := os.OpenFile(s.IndexFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	flag := os.O_APPEND | os.O_CREATE | os.O_WRONLY
+	f, err := os.OpenFile(s.IndexFile, flag, 0644)
 	if err != nil {
 		t.Fatal(err)
 		return
