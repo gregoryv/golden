@@ -7,6 +7,16 @@ import (
 	"testing"
 )
 
+func TestAssert(t *testing.T) {
+	got := doSomething()
+	Assert(t, got)
+}
+
+func TestAssert_err(t *testing.T) {
+	Assert(&noTest{}, "blah")
+	os.RemoveAll("testdata/golden.TestAssert_err")
+}
+
 func TestLoad(t *testing.T) {
 	got := doSomething()
 	exp := Load()
@@ -53,15 +63,6 @@ func TestStore_load(t *testing.T) {
 	if string(got) != "" {
 		t.Fail()
 	}
-}
-
-func ExampleSaveString() {
-	got := doSomething()
-	exp := LoadString()
-	if got != exp {
-		t.Errorf("Got %q, expected %q", got, exp)
-	}
-	SaveString(t, got) // Does nothing unless -update-golden flags are present
 }
 
 func doSomething() string { return "hello" }

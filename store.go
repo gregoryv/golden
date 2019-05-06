@@ -35,6 +35,15 @@ func init() {
 	defaultStore = newStore()
 }
 
+func Assert(t T, got string) {
+	t.Helper()
+	exp := string(defaultStore.load())
+	if got != exp {
+		t.Errorf("Got %q, expected %q", got, exp)
+	}
+	defaultStore.save(t, []byte(got))
+}
+
 // Load returns the content of a stored golden file, defaults to empty slice.
 func Load() []byte {
 	return defaultStore.load()
@@ -125,6 +134,7 @@ func (s *store) filenameFromCaller(skip int) (filename, file string) {
 
 // T defines parts of testing.T needed in this package
 type T interface {
+	Errorf(string, ...interface{})
 	Helper()
 	Fatal(...interface{})
 }

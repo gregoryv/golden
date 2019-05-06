@@ -1,2 +1,4 @@
+golden.TestAssert
+golden.TestAssert_err
 golden.TestLoad
 golden.TestLoadString
