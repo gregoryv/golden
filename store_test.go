@@ -9,11 +9,19 @@ import (
 
 func TestAssert(t *testing.T) {
 	got := doSomething()
-	Assert(t, got)
+	mock := &noTest{ok: true}
+	Assert(mock, got)
+	if !mock.ok {
+		t.Error("Assert should be ok")
+	}
 }
 
 func TestAssert_err(t *testing.T) {
-	Assert(&noTest{}, "blah")
+	mock := &noTest{ok: true}
+	Assert(mock, "blah")
+	if mock.ok {
+		t.Error("Assert should have failed")
+	}
 	os.RemoveAll("testdata/golden.TestAssert_err")
 }
 
@@ -41,7 +49,7 @@ func Test_fail(t *testing.T) {
 		IndexFile: "",
 		skip:      3,
 	}
-	mock := &noTest{}
+	mock := &noTest{ok: true}
 	store.save(mock, []byte("hepp"))
 	if mock.ok {
 		t.Fail()
