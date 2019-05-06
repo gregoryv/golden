@@ -1,15 +1,13 @@
 /* package golden enables reading and writing golden files in testdata
 
-   func TestMe(t *testing.T) {
+   func TestMeShort(t *testing.T) {
        got := doSomething()
-       exp := golden.LoadString()
-       if got != exp {
-           t.Fail()
-       }
-       golden.SaveString(t, got)
+       // Does got equal the content of the golden file and update
+       // golden file if -update-golden flag is given.
+       golden.Assert(t, got)
    }
 
-Golden file is saved in testdata/package.TestMe and an entry is added to
+Golden file is saved in testdata/package.TestMeShort and an entry is added to
 testdata/golden.files
 
 To update the golden files use
