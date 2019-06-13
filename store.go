@@ -37,7 +37,7 @@ func Assert(t T, got string) {
 	t.Helper()
 	exp := string(defaultStore.load())
 	if got != exp {
-		t.Errorf("Got %q, expected %q", got, exp)
+		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
 	}
 	defaultStore.save(t, []byte(got))
 }
