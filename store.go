@@ -24,6 +24,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"sync"
 )
 
@@ -125,9 +126,23 @@ func (s *store) load() []byte {
 func (s *store) filenameFromCaller(skip int) (filename, file string) {
 	pc, _, _, _ := runtime.Caller(skip)
 	fullName := runtime.FuncForPC(pc).Name()
+	fullName = cleanFilename(fullName)
 	filename = filepath.Base(fullName)
 	file = path.Join(s.RootDir, filename)
 	return
+}
+
+func cleanFilename(filename string) string {
+	return strings.Map(
+		func(r rune) rune {
+			switch r {
+			case '(', '*', ')':
+				return -1
+			}
+			return r
+		},
+		filename,
+	)
 }
 
 // T defines parts of testing.T needed in this package

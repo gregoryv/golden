@@ -7,6 +7,22 @@ import (
 	"testing"
 )
 
+func TestAssert_BDD_helpers(t *testing.T) {
+	bdd := &bdd{}
+	bdd.method_helper(t)
+}
+
+type bdd struct{}
+
+func (b *bdd) method_helper(t *testing.T) {
+	t.Helper()
+	Assert(noop, "blah")
+	err := os.Remove("testdata/golden.bdd.method_helper")
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestAssert(t *testing.T) {
 	got := doSomething()
 	mock := &noTest{ok: true}
