@@ -34,6 +34,24 @@ func init() {
 	defaultStore = newStore()
 }
 
+// AssertWith compares got with the contents of filename.  If
+// -update-golden flag is given got is saved into filename.
+func AssertWith(t T, got, filename string) {
+	t.Helper()
+	body, _ := ioutil.ReadFile(filename)
+	exp := string(body)
+	if got != exp {
+		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
+	}
+	if !*updateGolden {
+		return
+	}
+	ioutil.WriteFile(filename, []byte(got), 0644)
+}
+
+// Assert compares got to the contents of the default golden file
+// found in testdata/ matching the name of the test calling the
+// assert.
 func Assert(t T, got string) {
 	t.Helper()
 	exp := string(defaultStore.load())

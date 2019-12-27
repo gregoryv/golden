@@ -23,6 +23,28 @@ func (b *bdd) method_helper(t *testing.T) {
 	}
 }
 
+func TestAssertWith(t *testing.T) {
+	got := doSomething()
+	fh, err := ioutil.TempFile("", "golden")
+	if err != nil {
+		t.Fatal(err)
+	}
+	fh.Close()
+	defer os.RemoveAll(fh.Name())
+	*updateGolden = true
+	mock := &noTest{ok: true}
+	AssertWith(mock, got, fh.Name())
+	if mock.ok {
+		t.Error("Assert should fail")
+	}
+	*updateGolden = false
+	mock = &noTest{ok: true}
+	AssertWith(mock, got, fh.Name())
+	if !mock.ok {
+		t.Error("Assert should be ok")
+	}
+}
+
 func TestAssert(t *testing.T) {
 	got := doSomething()
 	mock := &noTest{ok: true}
@@ -66,6 +88,7 @@ func Test_fail(t *testing.T) {
 		skip:      3,
 	}
 	mock := &noTest{ok: true}
+	*updateGolden = true
 	store.save(mock, []byte("hepp"))
 	if mock.ok {
 		t.Fail()
@@ -103,7 +126,7 @@ var noop *noTest = &noTest{}
 var t *noTest = &noTest{}
 
 func Test_nosave(t *testing.T) {
-	// Leave this test last as it sets a global
 	*updateGolden = false
 	SaveString(t, "hepp")
+	*updateGolden = true
 }

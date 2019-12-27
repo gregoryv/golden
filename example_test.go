@@ -1,6 +1,23 @@
 package golden_test
 
-import "github.com/gregoryv/golden"
+import (
+	"io/ioutil"
+
+	"github.com/gregoryv/golden"
+)
+
+var somefile string
+
+func init() {
+	fh, _ := ioutil.TempFile("", "golden")
+	fh.Close()
+	somefile = fh.Name()
+}
+
+func ExampleAssertWith() {
+	got := doSomething()
+	golden.AssertWith(t, got, somefile)
+}
 
 func ExampleAssert() {
 	got := doSomething()
