@@ -38,15 +38,14 @@ func init() {
 // -update-golden flag is given got is saved into filename.
 func AssertWith(t T, got, filename string) {
 	t.Helper()
+	if *updateGolden {
+		ioutil.WriteFile(filename, []byte(got), 0644)
+	}
 	body, _ := ioutil.ReadFile(filename)
 	exp := string(body)
 	if got != exp {
 		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
 	}
-	if !*updateGolden {
-		return
-	}
-	ioutil.WriteFile(filename, []byte(got), 0644)
 }
 
 // Assert compares got to the contents of the default golden file
@@ -54,11 +53,11 @@ func AssertWith(t T, got, filename string) {
 // assert.
 func Assert(t T, got string) {
 	t.Helper()
+	defaultStore.save(t, []byte(got))
 	exp := string(defaultStore.load())
 	if got != exp {
 		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
 	}
-	defaultStore.save(t, []byte(got))
 }
 
 // Load returns the content of a stored golden file, defaults to empty slice.

@@ -26,3 +26,6 @@ are no longer used.
 To update the golden files use
 
     go test -args -update-golden
+
+
+Article at [7de.se/golden](https://www.7de.se/golden/)

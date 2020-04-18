@@ -17,8 +17,9 @@ type bdd struct{}
 func (b *bdd) method_helper(t *testing.T) {
 	t.Helper()
 	Assert(noop, "blah")
-	err := os.Remove("testdata/golden.bdd.method_helper")
-	if err != nil {
+	// only tested when flags -args -update-golden is given
+	// the test is for cleanFilename func
+	if err := os.RemoveAll("testdata/golden.bdd.method_helper"); err != nil {
 		t.Error(err)
 	}
 }
@@ -31,17 +32,17 @@ func TestAssertWith(t *testing.T) {
 	}
 	fh.Close()
 	defer os.RemoveAll(fh.Name())
-	*updateGolden = true
+	*updateGolden = false
 	mock := &noTest{ok: true}
 	AssertWith(mock, got, fh.Name())
 	if mock.ok {
 		t.Error("Assert should fail")
 	}
-	*updateGolden = false
+	*updateGolden = true
 	mock = &noTest{ok: true}
 	AssertWith(mock, got, fh.Name())
 	if !mock.ok {
-		t.Error("Assert should be ok")
+		t.Error("Assert should not fail when updating")
 	}
 }
 
@@ -56,6 +57,7 @@ func TestAssert(t *testing.T) {
 
 func TestAssert_err(t *testing.T) {
 	mock := &noTest{ok: true}
+	*updateGolden = false // global, other tests can affect it
 	Assert(mock, "blah")
 	if mock.ok {
 		t.Error("Assert should have failed")
@@ -118,8 +120,8 @@ type noTest struct {
 	ok bool
 }
 
-func (t *noTest) Errorf(string, ...interface{}) { t.ok = false }
 func (t *noTest) Helper()                       {}
+func (t *noTest) Errorf(string, ...interface{}) { t.ok = false }
 func (t *noTest) Fatal(...interface{})          { t.ok = false }
 
 var noop *noTest = &noTest{}
