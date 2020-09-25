@@ -1,5 +1,5 @@
-/*
-Package golden enables reading and writing golden files in testdata.
+/* Package golden enables reading and writing golden files in
+testdata.
 
 Within your test, check complex output
 
@@ -10,12 +10,17 @@ Within your test, check complex output
        golden.Assert(t, complex)
    }
 
-Golden file is saved in testdata/package.TestMeShort and an entry is added to
-testdata/golden.files
+Golden file is saved in testdata/package.TestMeShort and an entry is
+added to testdata/golden.files
 
 To update the golden files use
 
     go test -args -update-golden
+
+As test names change over time the testdata/golden.files index is
+updated but the golden files cannot automatically be renamed or
+removed.
+
 
 */
 package golden

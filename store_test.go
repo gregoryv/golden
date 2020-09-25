@@ -84,31 +84,31 @@ func TestLoadString(t *testing.T) {
 }
 
 func Test_fail(t *testing.T) {
-	store := &store{
+	Store := &Store{
 		RootDir:   "/var/x",
 		IndexFile: "",
 		skip:      3,
 	}
 	mock := &noTest{ok: true}
 	*updateGolden = true
-	store.save(mock, []byte("hepp"))
+	Store.Save(mock, []byte("hepp"))
 	if mock.ok {
 		t.Fail()
 	}
 }
 
-func TestStore_load(t *testing.T) {
+func TestStore_Load(t *testing.T) {
 	dir, err := ioutil.TempDir("", "golden")
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer os.RemoveAll(dir)
-	store := &store{
+	Store := &Store{
 		RootDir:   dir,
 		IndexFile: path.Join(dir, "index.txt"),
 		skip:      3,
 	}
-	got := store.load()
+	got := Store.Load()
 	if string(got) != "" {
 		t.Fail()
 	}

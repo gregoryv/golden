@@ -9,7 +9,8 @@ import (
 	"sync"
 )
 
-type store struct {
+// Store defines a location and index of golden files.
+type Store struct {
 	RootDir   string
 	IndexFile string
 	skip      int
@@ -17,17 +18,35 @@ type store struct {
 	resetOnce sync.Once
 }
 
-// newStore returns a Store initialized with testdata as RootDir and
+// NewStore returns a Store initialized with testdata as RootDir and
 // golden.files as IndexFile
-func newStore() *store {
-	return &store{
+func NewStore() *Store {
+	return &Store{
 		RootDir:   "testdata",
 		IndexFile: filepath.Join("testdata", "golden.files"),
 		skip:      3,
 	}
 }
 
-func (s *store) save(t T, data []byte) {
+// Load returns body of a golden file based on caller func name.
+// Empty if no golden file exists.
+func (s *Store) Load() []byte {
+	_, file := s.filenameFromCaller(s.skip)
+	body, _ := ioutil.ReadFile(file)
+	return body
+}
+
+func (s *Store) filenameFromCaller(skip int) (filename, file string) {
+	pc, _, _, _ := runtime.Caller(skip)
+	fullName := runtime.FuncForPC(pc).Name()
+	fullName = cleanFilename(fullName)
+	filename = filepath.Base(fullName)
+	file = path.Join(s.RootDir, filename)
+	return
+}
+
+// Save writes the given data to RootDir with name from caller func
+func (s *Store) Save(t T, data []byte) {
 	if !*updateGolden {
 		return
 	}
@@ -50,7 +69,7 @@ func (s *store) save(t T, data []byte) {
 	f.Close()
 }
 
-func (s *store) resetGoldenFiles(t T) func() {
+func (s *Store) resetGoldenFiles(t T) func() {
 	t.Helper()
 	return func() {
 		t.Helper()
@@ -58,19 +77,4 @@ func (s *store) resetGoldenFiles(t T) func() {
 		os.MkdirAll(s.RootDir, 0755)
 		os.RemoveAll(s.IndexFile)
 	}
-}
-
-func (s *store) load() []byte {
-	_, file := s.filenameFromCaller(s.skip)
-	body, _ := ioutil.ReadFile(file)
-	return body
-}
-
-func (s *store) filenameFromCaller(skip int) (filename, file string) {
-	pc, _, _, _ := runtime.Caller(skip)
-	fullName := runtime.FuncForPC(pc).Name()
-	fullName = cleanFilename(fullName)
-	filename = filepath.Base(fullName)
-	file = path.Join(s.RootDir, filename)
-	return
 }
