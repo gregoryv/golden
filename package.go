@@ -1,5 +1,6 @@
-/* Package golden enables reading and writing golden files in
-testdata.
+/*
+
+Package golden enables reading and writing golden files in testdata.
 
 Within your test, check complex output
 
@@ -32,7 +33,7 @@ import (
 )
 
 var (
-	defaultStore *Store = NewStore()
+	DefaultStore *Store = NewStore()
 
 	updateGolden = flag.Bool("update-golden", false, "Update golden files")
 )
@@ -63,8 +64,8 @@ type T interface {
 // assert.
 func Assert(t T, got string) {
 	t.Helper()
-	defaultStore.Save(t, []byte(got))
-	exp := string(defaultStore.Load())
+	DefaultStore.Save(t, []byte(got))
+	exp := string(DefaultStore.Load())
 	if got != exp {
 		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
 	}
@@ -72,23 +73,23 @@ func Assert(t T, got string) {
 
 // Load returns the content of a stored golden file, defaults to empty slice.
 func Load() []byte {
-	return defaultStore.Load()
+	return DefaultStore.Load()
 }
 
 // Save saves the data as a golden file using the callers func name
 func Save(t T, data []byte) {
 	t.Helper()
-	defaultStore.Save(t, data)
+	DefaultStore.Save(t, data)
 }
 
 // LoadString loads the golden string from file using the default store
 func LoadString() string {
-	return string(defaultStore.Load())
+	return string(DefaultStore.Load())
 }
 
 func SaveString(t T, data string) {
 	t.Helper()
-	defaultStore.Save(t, []byte(data))
+	DefaultStore.Save(t, []byte(data))
 }
 
 func cleanFilename(filename string) string {
