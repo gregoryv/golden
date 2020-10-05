@@ -30,6 +30,8 @@ import (
 	"flag"
 	"io/ioutil"
 	"strings"
+
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 var (
@@ -46,9 +48,12 @@ func AssertWith(t T, got, filename string) {
 		ioutil.WriteFile(filename, []byte(got), 0644)
 	}
 	body, _ := ioutil.ReadFile(filename)
+
 	exp := string(body)
 	if got != exp {
-		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(got, exp, false)
+		t.Errorf("%s", dmp.DiffPrettyText(diffs))
 	}
 }
 
@@ -67,7 +72,10 @@ func Assert(t T, got string) {
 	DefaultStore.Save(t, []byte(got))
 	exp := string(DefaultStore.Load())
 	if got != exp {
-		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(got, exp, false)
+		t.Errorf("%s", dmp.DiffPrettyText(diffs))
+		//		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
 	}
 }
 

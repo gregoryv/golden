@@ -117,12 +117,18 @@ func TestStore_Load(t *testing.T) {
 func doSomething() string { return "hello" }
 
 type noTest struct {
-	ok bool
+	ok     bool
+	format string
+	v      []interface{}
 }
 
-func (t *noTest) Helper()                       {}
-func (t *noTest) Errorf(string, ...interface{}) { t.ok = false }
-func (t *noTest) Fatal(...interface{})          { t.ok = false }
+func (t *noTest) Helper() {}
+func (t *noTest) Errorf(f string, v ...interface{}) {
+	t.ok = false
+	t.format = f
+	t.v = v
+}
+func (t *noTest) Fatal(...interface{}) { t.ok = false }
 
 var noop *noTest = &noTest{}
 var t *noTest = &noTest{}

@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+
+- Use diff output for errors
+
 ## [0.5.0] 2020-09-25
 
 - Expose the default store
