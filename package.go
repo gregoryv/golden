@@ -53,7 +53,7 @@ func AssertWith(t T, got, filename string) {
 	if got != exp {
 		dmp := diffmatchpatch.New()
 		diffs := dmp.DiffMain(got, exp, false)
-		t.Errorf("%s", dmp.DiffPrettyText(diffs))
+		t.Errorf("golden.AssertWith failed:\n%s", dmp.DiffPrettyText(diffs))
 	}
 }
 
@@ -74,7 +74,7 @@ func Assert(t T, got string) {
 	if got != exp {
 		dmp := diffmatchpatch.New()
 		diffs := dmp.DiffMain(got, exp, false)
-		t.Errorf("%s", dmp.DiffPrettyText(diffs))
+		t.Errorf("golden.Assert failed:\n%s", dmp.DiffPrettyText(diffs))
 		//		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
 	}
 }
