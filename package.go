@@ -31,7 +31,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/sergi/go-diff/diffmatchpatch"
+	"github.com/pmezard/go-difflib/difflib"
 )
 
 var (
@@ -51,9 +51,7 @@ func AssertWith(t T, got, filename string) {
 
 	exp := string(body)
 	if got != exp {
-		dmp := diffmatchpatch.New()
-		diffs := dmp.DiffMain(got, exp, false)
-		t.Errorf("golden.AssertWith failed:\n%s", dmp.DiffToDelta(diffs))
+		t.Errorf("golden.AssertWith failed:\n%s", diff(got, exp))
 	}
 }
 
@@ -72,11 +70,21 @@ func Assert(t T, got string) {
 	DefaultStore.Save(t, []byte(got))
 	exp := string(DefaultStore.Load())
 	if got != exp {
-		dmp := diffmatchpatch.New()
-		diffs := dmp.DiffMain(got, exp, false)
-		t.Errorf("golden.Assert failed:\n%s", dmp.DiffToDelta(diffs))
-		//		t.Errorf("Got ----\n%s\nexpected ----\n%s\n", got, exp)
+		t.Errorf("golden.Assert failed:\n%s", diff(got, exp))
 	}
+}
+
+func diff(got, exp string) string {
+	d := difflib.UnifiedDiff{
+		A:        difflib.SplitLines(exp),
+		B:        difflib.SplitLines(got),
+		FromFile: "Exp",
+		ToFile:   "Got",
+		Context:  3,
+	}
+	text, _ := difflib.GetUnifiedDiffString(d)
+	return text
+
 }
 
 // Load returns the content of a stored golden file, defaults to empty slice.
