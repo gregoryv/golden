@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+
+- Update dependencies
+
 ## [0.6.0] 2020-10-05
 
 - Use diff output for errors
