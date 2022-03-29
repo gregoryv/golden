@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] 2022-03-29
+
+- Add AssertEquals for simple diff output
+
 ## [0.6.1] 2021-06-10
 
 - Update dependencies

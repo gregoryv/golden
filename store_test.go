@@ -46,6 +46,24 @@ func TestAssertWith(t *testing.T) {
 	}
 }
 
+func TestAssertEquals(t *testing.T) {
+	got := "hello"
+	mock := &noTest{ok: true}
+	AssertEquals(mock, got, "hello")
+	if !mock.ok {
+		t.Error("AssertEquals should be ok")
+	}
+}
+
+func TestAssertEquals_err(t *testing.T) {
+	got := "hello"
+	mock := &noTest{ok: false}
+	AssertEquals(mock, got, "blahello")
+	if mock.ok {
+		t.Error("AssertEquals should have failed")
+	}
+}
+
 func TestAssert(t *testing.T) {
 	got := doSomething()
 	mock := &noTest{ok: true}
