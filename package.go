@@ -44,7 +44,7 @@ var (
 func AssertEquals(t T, got, exp string) {
 	t.Helper()
 	if got != exp {
-		t.Errorf("golden.AssertWith failed:\n%s", diff(got, exp))
+		t.Errorf("golden.AssertEquals failed:\n%s", diff(got, exp))
 	}
 }
 
