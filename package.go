@@ -40,6 +40,14 @@ var (
 	updateGolden = flag.Bool("update-golden", false, "Update golden files")
 )
 
+// AssertEquals compares got with exp.
+func AssertEquals(t T, got, exp string) {
+	t.Helper()
+	if got != exp {
+		t.Errorf("golden.AssertWith failed:\n%s", diff(got, exp))
+	}
+}
+
 // AssertWith compares got with the contents of filename.  If
 // -update-golden flag is given got is saved into filename.
 func AssertWith(t T, got, filename string) {

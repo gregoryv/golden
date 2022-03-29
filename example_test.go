@@ -14,6 +14,12 @@ func init() {
 	somefile = fh.Name()
 }
 
+func ExampleAssertEquals() {
+	got := doSomething()
+	exp := "hello"
+	golden.AssertEquals(t, got, exp)
+}
+
 func ExampleAssertWith() {
 	got := doSomething()
 	golden.AssertWith(t, got, somefile)
