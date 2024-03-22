@@ -3,8 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased] 2024-03-22
+## [0.8.0] 2024-03-22
 
+- Use github.com/sergi/go-diff (maintained)
+- Update year in license
 - Update dependencies
 
 ## [0.7.1] 2022-03-29

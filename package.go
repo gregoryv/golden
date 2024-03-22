@@ -1,28 +1,25 @@
 /*
-
 Package golden enables reading and writing golden files in testdata.
 
 Within your test, check complex output
 
-   func TestMeShort(t *testing.T) {
-       complex := doSomething()
-       // Does got equal the content of the golden file and update
-       // golden file if -update-golden flag is given.
-       golden.Assert(t, complex)
-   }
+	func TestMeShort(t *testing.T) {
+	    complex := doSomething()
+	    // Does got equal the content of the golden file and update
+	    // golden file if -update-golden flag is given.
+	    golden.Assert(t, complex)
+	}
 
 Golden file is saved in testdata/package.TestMeShort and an entry is
 added to testdata/golden.files
 
 To update the golden files use
 
-    go test -args -update-golden
+	go test -args -update-golden
 
 As test names change over time the testdata/golden.files index is
 updated but the golden files cannot automatically be renamed or
 removed.
-
-
 */
 package golden
 
@@ -31,7 +28,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/pmezard/go-difflib/difflib"
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 var (
@@ -83,16 +80,9 @@ func Assert(t T, got string) {
 }
 
 func diff(got, exp string) string {
-	d := difflib.UnifiedDiff{
-		A:        difflib.SplitLines(exp),
-		B:        difflib.SplitLines(got),
-		FromFile: "Exp",
-		ToFile:   "Got",
-		Context:  3,
-	}
-	text, _ := difflib.GetUnifiedDiffString(d)
-	return text
-
+	dmp := diffmatchpatch.New()
+	diffs := dmp.DiffMain(exp, got, false)
+	return dmp.DiffPrettyText(diffs)
 }
 
 // Load returns the content of a stored golden file, defaults to empty slice.
